@@ -1,0 +1,31 @@
+{
+  "name": "korapay-assessment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "newmanTests": "node postmanAutomation/scripts/update-environment.js && node postmanAutomation/run-newman.js",
+    "regressionTests": "npm run newmanTests && npm run cypress:run",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmekaKalu/korapay-assessment.git"
+  },
+  "author": "Emeka Kalu Ottah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EmekaKalu/korapay-assessment/issues"
+  },
+  "homepage": "https://github.com/EmekaKalu/korapay-assessment#readme",
+  "devDependencies": {
+    "cypress": "^14.0.3",
+    "dotenv": "^16.4.7",
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.5.0"
+  }
+}

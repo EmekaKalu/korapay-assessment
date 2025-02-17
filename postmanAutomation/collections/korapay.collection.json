@@ -1,0 +1,2288 @@
+{
+	"info": {
+		"_postman_id": "bed12d4d-5d7d-44cb-a374-d8cb3b3df051",
+		"name": "QA Engineer Assessment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18167960"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Sign Up",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function generateNigerianPhone() {",
+									"    const prefixes = ['803', '806', '703', '706', '813', '816', '810', '814'];",
+									"    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];",
+									"    const randomDigits = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');",
+									"    return `0${prefix}${randomDigits}`;",
+									"}",
+									"pm.variables.set(\"nigerianPhoneNumber\", generateNigerianPhone());",
+									"console.log(generateNigerianPhone());",
+									"",
+									"function generateTestEmail() {",
+									"    const randomString = Math.random().toString(36).substring(2, 8);",
+									"    const randomNumber = Math.floor(Math.random() * 900) + 100;",
+									"    return `${randomString}${randomNumber}@mailsac.com`; // Using mailsac for test emails",
+									"}",
+									"",
+									"pm.environment.set(\"TestEmail\", generateTestEmail());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store email used in request to an environment variable\", function () {",
+									"    pm.environment.set(\"email\", pm.request.body.email);",
+									"});",
+									"",
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'SignUp Successful'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"SignUp Successful\");",
+									"});",
+									"",
+									"pm.test(\"Verify status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"{{$randomFullName}}\",\n    \"email\": \"{{TestEmail}}\",\n    \"username\": \"{{$randomUserName}}\",\n    \"phone_number\": \"{{nigerianPhoneNumber}}\",\n    \"password\": \"{{kora_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Sign Up",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\": \"Test Tester\",\n    \"email\": \"test@gmail.com\",\n    \"username\": \"Test\",\n    \"phone_number\": \"08024110355\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/signup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "128"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"80-Rx/FFnCzwlP8LTinXsyEEYhYtuY\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:47:24 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"bad_request\",\n    \"message\": \"A user with that phone number or email or username already exists\",\n    \"data\": null\n}"
+						},
+						{
+							"name": "Sign Up",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\": \"Test Tester\",\n    \"email\": \"test@gmail.com\",\n    \"username\": \"Test\",\n    \"phone_number\": \"08024110355\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/signup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "570"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"23a-A0pncqdzFwwthbQZon9Y0thWEZc\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 14:35:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"SignUp Successful\",\n    \"data\": {\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjZmVmMWE1LTUxNDQtNDkxZC04NDg5LTRmMmNlM2YwZDk0YSIsImlhdCI6MTYxNzk3ODkzMiwiZXhwIjoxNjE4MDY1MzMyLCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.PDNelYhby211LFW9skdK43P6D0KLF2Euzb7cywn-oew\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjZmVmMWE1LTUxNDQtNDkxZC04NDg5LTRmMmNlM2YwZDk0YSIsImlhdCI6MTYxNzk3ODkzMiwiZXhwIjoxNjE4MDY1MzMyLCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.PDNelYhby211LFW9skdK43P6D0KLF2Euzb7cywn-oew\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Log In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store access token in environment variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"accessToken\", jsonData.data.access_token);",
+									"});",
+									"",
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'Authentication Successful'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"Authentication Successful\");",
+									"});",
+									"",
+									"pm.test(\"Verify status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{TestEmail}}\",\n    \"password\": \"{{kora_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Log In",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "80"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"50-Euj/ukk0hWStoP7M1Wl5zDuGCS8\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:46:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"not_found\",\n    \"message\": \"Invalid Credentials\",\n    \"data\": null\n}"
+						},
+						{
+							"name": "Log In",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "578"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"242-K7VK7sYucdpKBHpJq1C16gym7ig\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 15:46:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Authentication Successful\",\n    \"data\": {\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjZmVmMWE1LTUxNDQtNDkxZC04NDg5LTRmMmNlM2YwZDk0YSIsImlhdCI6MTYxNzk4MzIwOCwiZXhwIjoxNjE4MDY5NjA4LCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.y2pANzlbSkt3rcTmikA4Ib-fNJYer0FlKXtmPy0nAAM\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjZmVmMWE1LTUxNDQtNDkxZC04NDg5LTRmMmNlM2YwZDk0YSIsImlhdCI6MTYxNzk4MzIwOCwiZXhwIjoxNjE4MDY5NjA4LCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.y2pANzlbSkt3rcTmikA4Ib-fNJYer0FlKXtmPy0nAAM\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Generate 2FA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'TwoFa activated successfully'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"TwoFa activated successfully\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/2fa/generate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"2fa",
+								"generate"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Generate 2FA",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/2fa/generate",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"2fa",
+										"generate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"113f-+vJ/6YR9MvHCToOtCv5YByODYGA\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 15:51:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"TwoFa activated successfully\",\n    \"data\": {\n        \"image_url\": \"data:image/png;base64,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\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Mobile PIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'Your mobile pin has been updated successfully'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"Your mobile pin has been updated successfully\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mobile_pin\": \"{{mobile_pin}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/mobile/pin",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"mobile",
+								"pin"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mobile_pin\": \"{{mobile_pin}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/mobile/pin",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"mobile",
+										"pin"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "74"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"4a-fLSxLZ2ay3CQocCzmQv5RsghtFo\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 15:56:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Your mobile pin has been updated successfully\"\n}"
+						},
+						{
+							"name": "Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mobile_pin\": \"{{kora_mobile_pin}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/mobile/pin",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"mobile",
+										"pin"
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 13 Apr 2021 12:03:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "156"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"9c-MjxOiS9Rtg1xAl6OVkpZNYj79ts\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"validation_error\",\n    \"message\": \"Invalid Request Data\",\n    \"data\": {\n        \"mobile_pin\": {\n            \"message\": \"mobile_pin length must be 4 characters long\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update User Details",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function generateSimpleName() {",
+									"    const firstNames = ['John', 'Mary', 'Chioma', 'Oluwaseun', 'Aisha', 'Mohammed', 'Sarah', 'David'];",
+									"    const lastNames = ['Smith', 'Okonkwo', 'Adebayo', 'Ibrahim', 'Williams', 'Okafor', 'Hassan', 'Ahmed'];",
+									"    ",
+									"    return `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;",
+									"}",
+									"",
+									"pm.environment.set(\"TestFullName\", generateSimpleName());",
+									"",
+									"function generateSimpleUsername() {",
+									"    const name = ['john', 'mary', 'sam', 'alex', 'dev', 'test'][Math.floor(Math.random() * 6)];",
+									"    const num = Math.floor(Math.random() * 1000);",
+									"    return `${name}${num}`;",
+									"}",
+									"",
+									"pm.environment.set(\"TestUserName\", generateSimpleUsername());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify fullname is updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.user.full_name).to.equal(pm.variables.get(\"TestFullName\"));",
+									"});",
+									"",
+									"pm.test(\"Verify username is updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.user.username).to.equal(pm.variables.get(\"TestUserName\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{TestUserName}}\",\n    \"full_name\": \"{{TestFullName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"update"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update User Details",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"test123\",\n    \"full_name\": \"Hello World\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/update",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"update"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "283"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"11b-+s2PYNNiVwlafi6HeAKcRGmz8Ic\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:14:28 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile Update Successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": \"ecfef1a5-5144-491d-8489-4f2ce3f0d94a\",\n            \"full_name\": \"Hello World\",\n            \"email\": \"test@gmail.com\",\n            \"username\": \"test123\",\n            \"phone_number\": \"08024110355\",\n            \"profile_image\": null,\n            \"email_verified\": false,\n            \"twofa_enabled\": false\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Password Change",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'Password Update Successful'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"Password Update Successful\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"new_password\": \"{{kora_new_password}}\",\n    \"password\": \"{{kora_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"password"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Invalid Password",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"new_password\": \"Test123456***\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"password"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 13 Apr 2021 11:50:41 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "85"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"55-K6x/TcaorBMgrLbN+TkvJLeyrq0\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"not_authorized\",\n    \"message\": \"Invalid credentials\",\n    \"data\": null\n}"
+						},
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"new_password\": \"1234&(%4$Abcd\",\n    \"password\": \"4321&*#4$wxyz\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"password"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 13 Apr 2021 11:52:17 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "55"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"37-BkaeZG9wV0EwP1Ikch5TUByINlE\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "strict-origin-when-cross-origin"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "frame-ancestors 'none'"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Password Update Successful\"\n}"
+						},
+						{
+							"name": "Using Current Password",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"new_password\": \"Test123456***\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"password"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "104"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"68-4fUMhEvOl2cM3scJYkE2gA+ZTXc\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:17:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"bad_request\",\n    \"message\": \"This is an old password, please change it\",\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Log In after password change",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Store access token in environment variable\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"accessToken\", jsonData.data.access_token);",
+									"});",
+									"",
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'Authentication Successful'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"Authentication Successful\");",
+									"});",
+									"",
+									"pm.test(\"Verify status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{TestEmail}}\",\n    \"password\": \"{{kora_new_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Log In",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{TestEmail}}\",\n    \"password\": \"{{kora_new_password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "80"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"50-Euj/ukk0hWStoP7M1Wl5zDuGCS8\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:46:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"not_found\",\n    \"message\": \"Invalid Credentials\",\n    \"data\": null\n}"
+						},
+						{
+							"name": "Log In",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"Test123456***\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "578"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"242-K7VK7sYucdpKBHpJq1C16gym7ig\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 15:46:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Authentication Successful\",\n    \"data\": {\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjZmVmMWE1LTUxNDQtNDkxZC04NDg5LTRmMmNlM2YwZDk0YSIsImlhdCI6MTYxNzk4MzIwOCwiZXhwIjoxNjE4MDY5NjA4LCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.y2pANzlbSkt3rcTmikA4Ib-fNJYer0FlKXtmPy0nAAM\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjZmVmMWE1LTUxNDQtNDkxZC04NDg5LTRmMmNlM2YwZDk0YSIsImlhdCI6MTYxNzk4MzIwOCwiZXhwIjoxNjE4MDY5NjA4LCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.y2pANzlbSkt3rcTmikA4Ib-fNJYer0FlKXtmPy0nAAM\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify fullname is updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.user.full_name).to.equal(pm.variables.get(\"TestFullName\"));",
+									"});",
+									"",
+									"pm.test(\"Verify username is updated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.user.username).to.equal(pm.variables.get(\"TestUserName\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "245"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"f5-PKH76HTNwB828spbsqUly7rMiz8\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:24:03 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"ecfef1a5-5144-491d-8489-4f2ce3f0d94a\",\n            \"full_name\": \"Hello World\",\n            \"email\": \"test@gmail.com\",\n            \"username\": \"test123\",\n            \"phone_number\": \"08024110355\",\n            \"profile_image\": null,\n            \"email_verified\": false,\n            \"twofa_enabled\": false\n        }\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Wallet",
+			"item": [
+				{
+					"name": "Get User Wallet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Verify success in response is true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Verify message in response is 'Wallet retrieved successfully'\", function () {",
+									"    pm.expect(pm.response.json().message).to.equal(\"Wallet retrieved successfully\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/wallet/get",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallet",
+								"get"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get User Wallet",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/wallet/get",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"wallet",
+										"get"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "301"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"12d-HNja0sD6tpKERX9ZLglSXbfsR64\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:25:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Wallet retrieved successfully\",\n    \"data\": {\n        \"wallet\": {\n            \"ledger_balance\": 0,\n            \"available_balance\": 0,\n            \"id\": \"7332c1cd-1eb4-4ed7-84c2-2f0d3f484bee\",\n            \"pin\": null,\n            \"user_id\": \"ecfef1a5-5144-491d-8489-4f2ce3f0d94a\",\n            \"createdAt\": \"2021-04-09T14:35:32.000Z\",\n            \"updatedAt\": \"2021-04-09T14:35:32.000Z\"\n        }\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transfer",
+			"item": [
+				{
+					"name": "Resolve User Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test for checking if 'success' is true",
+									"pm.test(\"Response body contains 'success' as true\", function () {",
+									"    pm.expect(pm.response.json().success).to.be.true;",
+									"});",
+									"",
+									"// Test for checking the presence of 'user' object in the response body",
+									"pm.test(\"Response body contains 'user' object\", function () {",
+									"    pm.expect(pm.response.json().data.user).to.exist;",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/transfer/account?phone_number=08012345678",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfer",
+								"account"
+							],
+							"query": [
+								{
+									"key": "phone_number",
+									"value": "08012345678"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User Exists",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/transfer/account?phone_number=09018913201",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transfer",
+										"account"
+									],
+									"query": [
+										{
+											"key": "phone_number",
+											"value": "09018913201"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "178"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"b2-P/YhLd4EF+Vqzj34OIbd+4dwavo\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:28:34 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"5b72ba02-226c-41a8-b786-31ca29678cab\",\n            \"username\": \"divee789\",\n            \"profile_image\": null,\n            \"full_name\": \"Divine Olokor\",\n            \"phone_number\": \"09018913201\"\n        }\n    }\n}"
+						},
+						{
+							"name": "User not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/transfer/account?phone_number=0901891320",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transfer",
+										"account"
+									],
+									"query": [
+										{
+											"key": "phone_number",
+											"value": "0901891320"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "97"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"61-nfI3wlXyseBQbOtUZgNe3RRdPhU\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:49:02 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"error\": \"not_found\",\n    \"message\": \"No user with these credentials exist\",\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Resolve Contacts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test 1: Verify the response status code",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test 2: Verify the structure of the response body",
+									"pm.test(\"Response body has the expected structure\", function () {",
+									"    pm.expect(pm.response.json()).to.have.property('success', true);",
+									"    pm.expect(pm.response.json()).to.have.property('data').that.is.an('array');",
+									"    pm.expect(pm.response.json().data).to.have.lengthOf(2); // Assuming there are 2 contacts in the response",
+									"    pm.expect(pm.response.json().data[0]).to.have.property('id');",
+									"    pm.expect(pm.response.json().data[0]).to.have.property('full_name');",
+									"    pm.expect(pm.response.json().data[0]).to.have.property('username');",
+									"    pm.expect(pm.response.json().data[0]).to.have.property('profile_image');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/transfer/account/contacts?contacts=09018913201&contacts=08024110355",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfer",
+								"account",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "contacts",
+									"value": "09018913201"
+								},
+								{
+									"key": "contacts",
+									"value": "08024110355"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Resolve Contacts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/transfer/account/contacts?contacts=09018913201&contacts=08024110355",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transfer",
+										"account",
+										"contacts"
+									],
+									"query": [
+										{
+											"key": "contacts",
+											"value": "09018913201"
+										},
+										{
+											"key": "contacts",
+											"value": "08024110355"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "256"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"100-jnNNv61IF/wT4+y4J3lqUQajcsA\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Apr 2021 16:49:38 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": \"ecfef1a5-5144-491d-8489-4f2ce3f0d94a\",\n            \"full_name\": \"Hello World\",\n            \"username\": \"test123\",\n            \"profile_image\": null\n        },\n        {\n            \"id\": \"5b72ba02-226c-41a8-b786-31ca29678cab\",\n            \"full_name\": \"Divine Olokor\",\n            \"username\": \"divee789\",\n            \"profile_image\": null\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://qa-test-api.korapay.com"
+		},
+		{
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4ZjcxYzI1LTk3NTQtNDNjMy05MWIwLTcxYjU3M2FkMjU4OSIsImlhdCI6MTYxODMxNDE5MiwiZXhwIjoxNjE4NDAwNTkyLCJpc3MiOiJhbHBoYXBheSIsInN1YiI6ImFscGhhcGF5LXVzZXIifQ.44FkWS5ofqezBb5G563Nx0x7AJKfovCl3HxshNZ6GDs"
+		}
+	]
+}

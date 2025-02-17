@@ -1,0 +1,57 @@
+{
+  "id": "c0bfc22f-37b7-4bb5-b09b-8085cf5ac96c",
+  "name": "QAAssessment_Env",
+  "values": [
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "base_url",
+      "value": "https://qa-test-api.korapay.com",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "TestEmail",
+      "value": "",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "TestFullName",
+      "value": "",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "TestUserName",
+      "value": "",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "mobile_pin",
+      "value": "4576",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "kora_new_password",
+      "value": "Te$ter1234",
+      "type": "any",
+      "enabled": true
+    },
+    {
+      "key": "kora_password",
+      "value": "Te$ter123",
+      "type": "any",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2025-02-17T07:23:50.151Z",
+  "_postman_exported_using": "Postman/11.23.3"
+}
