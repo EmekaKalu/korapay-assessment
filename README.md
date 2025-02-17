@@ -13,7 +13,7 @@ A test automation framework for KoraPay's web application and API endpoints usin
 - dotenv
 
 ## 🏗 Project Structure
-
+```
 ├── cypress/
 │ ├── e2e/ # Test files
 │ ├── fixtures/ # Test data
@@ -24,7 +24,7 @@ A test automation framework for KoraPay's web application and API endpoints usin
 │ ├── environments/ # Environment variables
 │ ├── reports/ # Test execution reports
 │ └── scripts/ # Newman automation scripts
-
+```
 ## 🚀 Getting Started
 
 ### Prerequisites
